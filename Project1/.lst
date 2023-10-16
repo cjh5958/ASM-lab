@@ -1,8 +1,7 @@
-Microsoft (R) Macro Assembler Version 14.37.32824.0	    09/25/23 21:20:09
-HW							     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/16/23 18:22:23
+Source.asm						     Page 1 - 1
 
 
-				title HW1
 				include Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
 			      C 
@@ -22,42 +21,63 @@ Microsoft (R) Macro Assembler Version 14.37.32824.0	    09/25/23 21:20:09
 			      C .LIST
 			      C 
 
- 00000000			.data 
- 00000000 00000000			MyID DWORD ?
- 00000004 02				Digit0 BYTE 2
- 00000005 05				Digit1 BYTE 5
- 00000006 05				Digit2 BYTE 5
- 00000007 05				Digit3 BYTE 5
 
- 00000000			.code 
- 00000000			main PROC
+ 00000000			.data
+ 00000000 31 31 31 35 30	    myID byte "111502554"  ; Team leader student ID
+	   32 35 35 34
+ 00000009 31 31 31 35 30	    myID2 byte "111502555" ; Team member student ID
+	   32 35 35 35
+ = 00000009			    size_ID = 9    ; size_ID indicates the length of myID
+ 00000012  00000009 [		    result byte 9 DUP(?)  ; save the result
+	    00
+	   ]
 
- 00000000  0F BE 05		L1: movsx eax, Digit0
-	   00000004 R
- 00000007  C1 E0 08			shl eax, 8
+ 00000000			.code
+ 00000000			Main PROC
+ 00000000  BE 00000000 R	    mov esi, offset myID
+ 00000005  BB 00000009 R	    mov ebx, offset myID2
+ 0000000A  BF 00000012 R	    mov edi, offset result
+ 0000000F  B9 00000009		    mov ecx, size_ID
 
- 0000000A  0F BE 1D			movsx ebx, Digit1
-	   00000005 R
- 00000011  03 C3			add eax, ebx
- 00000013  C1 E0 08			shl eax, 8
+ 00000014			L1: 
+ 00000014  8A 06		    mov al, [esi]
+ 00000016  8A 23		    mov ah, [ebx]
+ 00000018  46			    inc esi
+ 00000019  43			    inc ebx
+ 0000001A  3A C4		    cmp al, ah
+ 0000001C  74 06		    jz LA
+ 0000001E  77 10		    ja LB
+ 00000020  72 1A		    jb LC
+ 00000022  E2 F0		    loop L1
 
- 00000016  0F BE 1D			movsx ebx, Digit2
-	   00000006 R
- 0000001D  03 C3			add eax, ebx
- 0000001F  C1 E0 08			shl eax, 8
+ 00000024			LA:
+ 00000024  66| B8 0041		    mov ax, 'A'
+ 00000028  66| 89 07		    mov [edi], ax
+ 0000002B  47			    inc edi
+ 0000002C  E2 E6		    loop L1
+ 0000002E  EB 18		    jmp ED
 
- 00000022  0F BE 1D			movsx ebx, Digit3
-	   00000007 R
- 00000029  03 C3			add eax, ebx
+ 00000030			LB:
+ 00000030  66| B8 0042		    mov ax, 'B'
+ 00000034  66| 89 07		    mov [edi], ax
+ 00000037  47			    inc edi
+ 00000038  E2 DA		    loop L1
+ 0000003A  EB 0C		    jmp ED
 
- 0000002B  A3 00000000 R		mov MyID, eax
+ 0000003C			LC:
+ 0000003C  66| B8 0043		    mov ax, 'C'
+ 00000040  66| 89 07		    mov [edi], ax
+ 00000043  47			    inc edi
+ 00000044  E2 CE		    loop L1
+ 00000046  EB 00		    jmp ED
 
-					exit
+ 00000048			ED:
+				    exit
 
- 00000037			main ENDP
+ 0000004F			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.37.32824.0	    09/25/23 21:20:09
-HW							     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/16/23 18:22:23
+Source.asm						     Symbols 2 - 1
 
 
 
@@ -150,8 +170,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000008 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000037 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000001B Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000004F Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -199,6 +219,12 @@ HeapFree . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 HeapSize . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 IsDigit  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 LocalFree  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000004F Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000014 _TEXT	
+  LA . . . . . . . . . . . . . .	L Near	 00000024 _TEXT	
+  LB . . . . . . . . . . . . . .	L Near	 00000030 _TEXT	
+  LC . . . . . . . . . . . . . .	L Near	 0000003C _TEXT	
+  ED . . . . . . . . . . . . . .	L Near	 00000048 _TEXT	
 MessageBoxA  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 MsgBoxAsk  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 MsgBox . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -258,8 +284,6 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000037 Public STDCALL
-  L1 . . . . . . . . . . . . . .	L Near	 00000000 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -285,10 +309,6 @@ CREATE_NEW . . . . . . . . . . .	Number	 00000001h
 CTRL_MASK  . . . . . . . . . . .	Number	 0000000Ch   
 CreateFile . . . . . . . . . . .	Text   	 CreateFileA
 DO_NOT_SHARE . . . . . . . . . .	Number	 00000000h   
-Digit0 . . . . . . . . . . . . .	Byte	 00000004 _DATA	
-Digit1 . . . . . . . . . . . . .	Byte	 00000005 _DATA	
-Digit2 . . . . . . . . . . . . .	Byte	 00000006 _DATA	
-Digit3 . . . . . . . . . . . . .	Byte	 00000007 _DATA	
 ENABLE_ECHO_INPUT  . . . . . . .	Number	 00000004h   
 ENABLE_LINE_INPUT  . . . . . . .	Number	 00000002h   
 ENABLE_MOUSE_INPUT . . . . . . .	Number	 00000010h   
@@ -382,7 +402,6 @@ MB_YESNO . . . . . . . . . . . .	Number	 00000004h
 MENU_EVENT . . . . . . . . . . .	Number	 00000008h   
 MOUSE_EVENT  . . . . . . . . . .	Number	 00000002h   
 MessageBox . . . . . . . . . . .	Text   	 MessageBoxA
-MyID . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
 NULL . . . . . . . . . . . . . .	Number	 00000000h   
 NUMLOCK_ON . . . . . . . . . . .	Number	 00000020h   
 OPEN_ALWAYS  . . . . . . . . . .	Number	 00000004h   
@@ -497,7 +516,11 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
+myID2  . . . . . . . . . . . . .	Byte	 00000009 _DATA	
+myID . . . . . . . . . . . . . .	Byte	 00000000 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
+result . . . . . . . . . . . . .	Byte	 00000012 _DATA	
+size_ID  . . . . . . . . . . . .	Number	 00000009h   
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   

@@ -1,33 +1,52 @@
-title HW1
 include Irvine32.inc
 
-.data 
-	MyID DWORD ?
-	Digit0 BYTE 2
-	Digit1 BYTE 5
-	Digit2 BYTE 5
-	Digit3 BYTE 5
+.data
+    myID byte "111502555"  ; Team leader student ID
+    myID2 byte "111502554" ; Team member student ID
+    size_ID = 9    ; size_ID indicates the length of myID
+    result byte 9 DUP(?)  ; save the result
 
-.code 
-main PROC
+.code
+Main PROC
+    mov esi, offset myID
+    mov ebx, offset myID2
+    mov edi, offset result
+    mov ecx, size_ID
 
-L1: movsx eax, Digit0
-	shl eax, 8
+L1: 
+    mov al, [esi]
+    mov ah, [ebx]
+    inc esi
+    inc ebx
+    cmp al, ah
+    jz LA
+    ja LB
+    jb LC
+    loop L1
 
-	movsx ebx, Digit1
-	add eax, ebx
-	shl eax, 8
+LA:
+    mov ax, 'A'
+    mov [edi], ax
+    inc edi
+    loop L1
+    jmp ED
 
-	movsx ebx, Digit2
-	add eax, ebx
-	shl eax, 8
+LB:
+    mov ax, 'B'
+    mov [edi], ax
+    inc edi
+    loop L1
+    jmp ED
 
-	movsx ebx, Digit3
-	add eax, ebx
+LC:
+    mov ax, 'C'
+    mov [edi], ax
+    inc edi
+    loop L1
+    jmp ED
 
-	mov MyID, eax
-
-	exit
+ED:         ;to leave the loop
+    exit    
 
 main ENDP
 END main
